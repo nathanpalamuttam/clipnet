@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from scipy.spatial.distance import jensenshannon
 from scipy.stats import pearsonr, spearmanr
-
+import os
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -26,6 +26,12 @@ def main():
         help="A csv(.gz), npy, or npz file containing the observed procap tracks.",
     )
     parser.add_argument(
+        "--individual_folder",  
+        type=str,
+        default=None,  
+        help="folder to get the individual observed data to compare to",
+    )
+    parser.add_argument(
         "output",
         type=str,
         help="An hdf5 file to write the performance metrics to.",
@@ -33,13 +39,29 @@ def main():
     args = parser.parse_args()
     with h5py.File(args.predictions, "r") as hf:
         track, quantity = hf["track"][:], hf["quantity"][:, 0]
-
-    if args.observed.endswith(".npz") or args.observed.endswith(".npy"):
-        observed = np.load(args.observed)
-        if args.observed.endswith(".npz"):
-            observed = observed["arr_0"]
-    elif args.observed.endswith(".csv.gz") or args.observed.endswith(".csv"):
-        observed = pd.read_csv(args.observed, header=None, index_col=0).to_numpy()
+    if args.individual_folder is not None:
+        #indiv data = where the individual id is located
+        #indiv_id = the individual id
+        #whole_file_name = the whole file name without the path 
+        #path_to_indiv_data = the path to the observed data for that individual
+        indiv_data = os.path.join(args.individual_folder, "lines.txt")
+        with open(indiv_data, "r") as file:
+            indiv_id = file.readline().strip()
+        whole_file_name = indiv_id + "TGACCA.hs37d5.bwa.uniqueUMI_0.csv.gz"
+        path_to_indiv_data = os.path.join(os.path.dirname(args.observed), whole_file_name)
+        if path_to_indiv_data.endswith(".npz") or path_to_indiv_data.endswith(".npy"):
+            observed = np.load(path_to_indiv_data)
+            if path_to_indiv_data.endswith(".npz"):
+                observed = observed["arr_0"]
+        elif path_to_indiv_data.endswith(".csv.gz") or path_to_indiv_data.endswith(".csv"):
+            observed = pd.read_csv(path_to_indiv_data, header=None, index_col=0).to_numpy()
+    else:
+        if args.observed.endswith(".npz") or args.observed.endswith(".npy"):
+            observed = np.load(args.observed)
+            if args.observed.endswith(".npz"):
+                observed = observed["arr_0"]
+        elif args.observed.endswith(".csv.gz") or args.observed.endswith(".csv"):
+            observed = pd.read_csv(args.observed, header=None, index_col=0).to_numpy()
     assert (
         track.shape[0] == observed.shape[0]
     ), f"n predictions ({track.shape[0]}) and n observed ({observed.shape[0]}) do not match."
