@@ -3,7 +3,7 @@
 import tensorflow as tf
 
 
-def pearson_loss(y_true, y_pred):
+def pearsonr(y_true, y_pred):
     """Deprecated. Use correlation_loss."""
     true_residual = y_true - tf.math.mean(y_true)
     pred_residual = y_pred - tf.math.mean(y_pred)
@@ -15,7 +15,7 @@ def pearson_loss(y_true, y_pred):
         )
     )
     r = num / den
-    return -r  # makes function decreasing and non-zero
+    return r  # makes function decreasing and non-zero
 
 
 def corr(x, y, pseudocount=1e-6):

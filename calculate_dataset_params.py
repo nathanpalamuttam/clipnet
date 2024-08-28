@@ -12,11 +12,11 @@ import numpy as np
 
 
 def write_dataset_params(i, datadir, outdir):
-    outdir = f"{outdir}/f{i + 1}/"
+    outdir = f"{outdir}/f{i}/"
     os.makedirs(outdir, exist_ok=True)
 
-    test_folds = [i + 1]
-    val_folds = [(i + 1) % 9 + 1]
+    test_folds = [i]
+    val_folds = [i % 9 + 1]
     train_folds = [j for j in range(1, 10) if j not in test_folds + val_folds]
     print(train_folds, val_folds, test_folds)
 
@@ -82,27 +82,39 @@ def main():
         help="directory to save dataset params to (where models will be saved)",
     )
     parser.add_argument(
-        "--threads", type=int, default=9, help="number of threads to use"
+        "--threads",
+        type=int,
+        default=9,
+        help="number of threads to use. Only used if not --fold is not selected.",
+    )
+    parser.add_argument(
+        "--fold",
+        type=int,
+        default=None,
+        help="fold to calculate dataset params for (will only run one).",
     )
     args = parser.parse_args()
-    if args.threads == 1:
-        for i in range(9):
-            write_dataset_params(i, args.datadir, args.outdir)
-    elif args.threads > 1:
-        import itertools
-        import multiprocessing as mp
-
-        with mp.Pool(9) as p:
-            p.starmap(
-                write_dataset_params,
-                zip(
-                    range(9),
-                    itertools.repeat(args.datadir),
-                    itertools.repeat(args.outdir),
-                ),
-            )
+    if args.threads <= 0:
+        raise ValueError("--threads must be a positive integer")
+    if args.fold is not None:
+        write_dataset_params(args.fold, args.datadir, args.outdir)
     else:
-        raise ValueError("threads must be >= 1")
+        if args.threads == 1:
+            for i in range(1, 10):
+                write_dataset_params(i, args.datadir, args.outdir)
+        elif args.threads > 1:
+            import itertools
+            import multiprocessing as mp
+
+            with mp.Pool(9) as p:
+                p.starmap(
+                    write_dataset_params,
+                    zip(
+                        range(1, 10),
+                        itertools.repeat(args.datadir),
+                        itertools.repeat(args.outdir),
+                    ),
+                )
 
 
 if __name__ == "__main__":

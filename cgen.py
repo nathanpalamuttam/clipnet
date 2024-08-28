@@ -34,9 +34,10 @@ def load_data(seq_fp, procap_fp, pad=0, reverse_complement=False):
         pass
     # otherwise, check if len 1 iterables and use the first item.
     else:
-        assert (
-            len(seq_fp) == len(procap_fp) == 1
-        ), "seq_fp and procap_fp must be strings or singleton iterables."
+        if not len(seq_fp) == len(procap_fp) == 1:
+            raise ValueError(
+                "seq_fp and procap_fp must be strings or singleton iterables."
+            )
         try:
             seq_fp = seq_fp[0]
             procap_fp = procap_fp[0]
@@ -71,9 +72,10 @@ class CGen(tf.keras.utils.Sequence):
         intrashuffle=True,
     ):
         # Check that lists of folds are all the same
-        assert len(seq_folds) == len(
-            procap_folds
-        ), f"lengths: seq_folds = {seq_folds}, procap_folds = {procap_folds}."
+        if len(seq_folds) != len(procap_folds):
+            raise ValueError(
+                f"lengths: seq_folds = {seq_folds}, procap_folds = {procap_folds}."
+            )
         self.seq_folds = seq_folds
         self.procap_folds = procap_folds
         self.fold_list = np.arange(len(self.seq_folds))

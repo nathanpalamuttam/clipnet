@@ -38,7 +38,11 @@ def main():
     )
     args = parser.parse_args()
     with h5py.File(args.predictions, "r") as hf:
-        track, quantity = hf["track"][:], hf["quantity"][:, 0]
+        track = hf["track"][:]
+        if len(hf["quantity"].shape) == 2:
+            quantity = hf["quantity"][:, 0]
+        else:
+            quantity = hf["quantity"][:]
     if args.individual_folder is not None:
         #indiv data = where the individual id is located
         #indiv_id = the individual id
@@ -61,16 +65,20 @@ def main():
             if args.observed.endswith(".npz"):
                 observed = observed["arr_0"]
         elif args.observed.endswith(".csv.gz") or args.observed.endswith(".csv"):
-            observed = pd.read_csv(args.observed, header=None, index_col=0).to_numpy()
-    assert (
-        track.shape[0] == observed.shape[0]
-    ), f"n predictions ({track.shape[0]}) and n observed ({observed.shape[0]}) do not match."
-    assert (
-        track.shape[1] <= observed.shape[1]
-    ), f"Predicted tracks ({track.shape[1]}) are longer than observed ({observed.shape[1]})."
-    assert (
-        observed.shape[1] - track.shape[1]
-    ) % 4 == 0, f"Padding around predicted tracks must be divisible by 4. {observed.shape[1] - track.shape[1]}"
+            observed = pd.read_csv(args.observed, header=None).to_numpy()
+
+    if track.shape[0] != observed.shape[0]:
+        raise ValueError(
+            f"n predictions ({track.shape[0]}) and n observed ({observed.shape[0]}) do not match."
+        )
+    if track.shape[1] > observed.shape[1]:
+        raise ValueError(
+            f"Predicted tracks ({track.shape[1]}) are longer than observed ({observed.shape[1]})."
+        )
+    if (observed.shape[1] - track.shape[1]) % 4 != 0:
+        raise ValueError(
+            f"Padding around predicted tracks ({observed.shape[1] - track.shape[1]}) must be divisible by 4."
+        )
     start = (observed.shape[1] - track.shape[1]) // 4
     end = observed.shape[1] // 2 - start
     observed_clipped = observed[
@@ -94,7 +102,15 @@ def main():
     quantity_spearman = spearmanr(quantity, observed_clipped.sum(axis=1))
 
     print(f"Median Track Pearson: {track_pearson.median():.4f}")
-    print(f"Median Track JS Distance: {pd.Series(track_js_distance).median():.4f}")
+    print(
+        f"Mean Track Pearson: {track_pearson.mean():.4f} "
+        + f"+/- {track_pearson.std():.4f}"
+    )
+    print(f"Median Track JS Distance: {pd.Series(track_js_distance).median():.4f} ")
+    print(
+        f"Mean Track JS Distance: {pd.Series(track_js_distance).mean():.4f} "
+        + f"+/- {pd.Series(track_js_distance).std():.4f}"
+    )
     print(f"Track Directionality Pearson: {directionality_pearson[0]:.4f}")
     print(f"Quantity Log Pearson: {quantity_log_pearson[0]:.4f}")
     print(f"Quantity Spearman: {quantity_spearman[0]:.4f}")
