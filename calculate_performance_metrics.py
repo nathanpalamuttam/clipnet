@@ -51,7 +51,7 @@ def main():
         indiv_data = os.path.join(args.individual_folder, "lines.txt")
         with open(indiv_data, "r") as file:
             indiv_id = file.readline().strip()
-        whole_file_name = indiv_id + "TGACCA.hs37d5.bwa.uniqueUMI_0.csv.gz"
+        whole_file_name = indiv_id + "hs37d5.bwa.uniqueUMI_0.csv.gz"
         path_to_indiv_data = os.path.join(os.path.dirname(args.observed), whole_file_name)
         if path_to_indiv_data.endswith(".npz") or path_to_indiv_data.endswith(".npy"):
             observed = np.load(path_to_indiv_data)
