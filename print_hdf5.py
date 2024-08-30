@@ -13,7 +13,12 @@ import pandas as pd
 
 # Load the .csv.gz file
 data = pd.read_csv('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz')
-print(data.head(1))
+
+# Print the first cell of the first row
+first_cell = data.iloc[0, 0]
+print(first_cell)
+print()
+print(data.head())
 
 # Get the length of the DataFrame (number of rows)
 #GSM3004658_51654_R1_cap.clip.CGATGT
@@ -22,10 +27,10 @@ print(data.head(1))
 import h5py
 
 # Open the HDF5 file
-with h5py.File('/home2/npp8/data/n1_run0_prediction.hdf5', 'r') as hf:
-    # Assuming 'track' or 'quantity' is the dataset you want to get the length of
-    data_length = len(hf['track'])  # or use 'quantity' depending on which dataset you're interested in
-    print(f"Length of 'track' dataset in 'n1_run0_prediction.hdf5': {data_length}")
+# with h5py.File('/home2/npp8/data/n1_run0_prediction.hdf5', 'r') as hf:
+#     # Assuming 'track' or 'quantity' is the dataset you want to get the length of
+#     data_length = len(hf['track'])  # or use 'quantity' depending on which dataset you're interested in
+#     print(f"Length of 'track' dataset in 'n1_run0_prediction.hdf5': {data_length}")
 
 
 # with gzip.open('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz', mode='rt') as file:
