@@ -19,7 +19,7 @@ print(f"Length of '{key}' dataset in 'concat_procap_0.npz': {data_length}")
 import h5py
 
 # Open the HDF5 file
-with h5py.File('n1_run0_prediction.hdf5', 'r') as hf:
+with h5py.File('/home2/npp8/data/n1_run0_prediction.hdf5', 'r') as hf:
     # Assuming 'track' or 'quantity' is the dataset you want to get the length of
     data_length = len(hf['track'])  # or use 'quantity' depending on which dataset you're interested in
     print(f"Length of 'track' dataset in 'n1_run0_prediction.hdf5': {data_length}")
