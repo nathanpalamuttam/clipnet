@@ -7,7 +7,7 @@ file = h5py.File('/home2/npp8/data/n1_run0_prediction.hdf5', 'r')
 print("Keys: %s" % file.keys())
 
 # Access a group or dataset
-dataset = file['track']
+dataset = file['quantity']
 
 # If you want to read the data
 data = dataset[:]
