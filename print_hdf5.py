@@ -3,20 +3,37 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr
-
-# out_dir = Path("/home2/ayh8/predictions/lcl_subsample/") # wherever your predictions are stored
-# procap_fp = "/home2/ayh8/data/lcl/fixed_windows/concat_procap_0.csv.gz" # wherever your experimental data is stored
 import gzip
 import csv
+import numpy as np
 
-# Replace 'your_file.csv.gz' with the path to your .csv.gz file
-with gzip.open('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz', mode='rt') as file:
-    reader = csv.reader(file)
-    for i, line in enumerate(reader):
-        if i < 5:
-            print(line)
-        else:
-            break
+# Load the NPZ file
+data = np.load('/home2/npp8/data/1_subsample_run0/final/concat_procap_0.npz')
+
+# Assuming there's a key in the NPZ file that you want the length of
+# You need to know the key (variable name) within the .npz file
+key = list(data.keys())[0]  # This gets the first key, adjust based on your needs
+data_length = len(data[key])
+print(f"Length of '{key}' dataset in 'concat_procap_0.npz': {data_length}")
+
+import h5py
+
+# Open the HDF5 file
+with h5py.File('n1_run0_prediction.hdf5', 'r') as hf:
+    # Assuming 'track' or 'quantity' is the dataset you want to get the length of
+    data_length = len(hf['track'])  # or use 'quantity' depending on which dataset you're interested in
+    print(f"Length of 'track' dataset in 'n1_run0_prediction.hdf5': {data_length}")
+
+
+# with gzip.open('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz', mode='rt') as file:
+#     reader = csv.reader(file)
+#     for i, line in enumerate(reader):
+#         if i < 5:
+#             print(line)
+#         else:
+#             break
+# out_dir = Path("/home2/ayh8/predictions/lcl_subsample/") # wherever your predictions are stored
+# procap_fp = "/home2/ayh8/data/lcl/fixed_windows/concat_procap_0.csv.gz" # wherever your experimental data is stored
 
 # procap = pd.read_csv(procap_fp, index_col=0, header=None)
 
