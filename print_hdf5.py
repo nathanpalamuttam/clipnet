@@ -10,11 +10,16 @@ import numpy as np
 # Load the NPZ file
 data = np.load('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz')
 
-# Assuming there's a key in the NPZ file that you want the length of
-# You need to know the key (variable name) within the .npz file
-key = list(data.keys())[0]  # This gets the first key, adjust based on your needs
-data_length = len(data[key])
-print(f"Length of '{key}' dataset in 'concat_procap_0.npz': {data_length}")
+import pandas as pd
+
+# Load the .csv.gz file
+data = pd.read_csv('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz')
+
+# Get the length of the DataFrame (number of rows)
+length = len(data)
+
+print(f"Number of rows in the file: {length}")
+
 
 import h5py
 
