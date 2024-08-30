@@ -8,7 +8,7 @@ import csv
 import numpy as np
 
 # Load the NPZ file
-data = np.load('/home2/npp8/data/1_subsample_run0/final/concat_procap_0.npz')
+data = np.load('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz')
 
 # Assuming there's a key in the NPZ file that you want the length of
 # You need to know the key (variable name) within the .npz file
