@@ -13,11 +13,10 @@ import pandas as pd
 
 # Load the .csv.gz file
 data = pd.read_csv('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz')
+print(data.head(1))
 
 # Get the length of the DataFrame (number of rows)
-length = len(data)
-
-print(f"Number of rows in the file: {length}")
+#GSM3004658_51654_R1_cap.clip.CGATGT
 
 
 import h5py
