@@ -8,7 +8,6 @@ import csv
 import numpy as np
 
 # Load the NPZ file
-data = np.load('/fs/cbsubscb17/storage/projects/CLIPNET/data/gse110638/fixed_windows/data_folds/procap/concat_procap_0.csv.gz')
 
 import pandas as pd
 
