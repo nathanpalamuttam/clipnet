@@ -39,7 +39,7 @@ procap = pd.read_csv(procap_fp, index_col=0, header=None)
 
 runs = range(5)
 for r in runs:
-    names = tuple(filter(None, Path(f"n1_run{r}/lines.txt").read_text().split("\n")))
+    names = tuple(filter(None, Path(f"/home2/npp8/data/1_subsample_run{r}/lines.txt").read_text().split("\n")))
     out_fp = out_dir.joinpath(f"n1_run{r}_predictions.h5")
     with h5py.File(out_fp, "r") as hf:
         profile = hf["track"][:]
