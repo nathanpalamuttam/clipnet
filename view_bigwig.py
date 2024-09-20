@@ -1,7 +1,7 @@
 import pyBigWig
 
 # Open the BigWig file
-bw = pyBigWig.open("Seq_dedup_QC_end_minus_merged.bw")
+bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
 
 # Print the header information
 print("Header Information:")
