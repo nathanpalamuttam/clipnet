@@ -2,7 +2,7 @@ import pyBigWig
 
 # Open the BigWig file
 bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
-
+bw1 = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz")
 # Print header information
 print("Header Information:")
 print(f"Chromosomes: {bw.chroms()}")
