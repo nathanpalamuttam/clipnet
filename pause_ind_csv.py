@@ -28,8 +28,10 @@ with open(output_csv, 'w', newline='') as csvfile:
             
             # Calculate the ratio, handling the case where TES count is 0 to avoid division by zero
             ratio = pol_ii_tss / pol_ii_tes if pol_ii_tes != 0 else 'undefined'
+            if ratio == 'undefined' or ratio == 0:
+                print(strand)
             
             # Write the row to the CSV file
-            csv_writer.writerow([key, gene_id, ratio])
+            #csv_writer.writerow([key, gene_id, ratio])
 
 print(f"Data successfully written to {output_csv}")
