@@ -1,18 +1,19 @@
+from collections import defaultdict
 import pyBigWig
 import gzip
 # Open the BigWig file
 bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
 line_count = 0
-hashMapTSS = {}
+hashMapTSS = defaultdict(list)
 #this is the TSS start and end sites
 with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz", 'rt') as f:
     for _ in range(5):  # adjust the range as needed to see more lines
         temp = f.readline().split("\t")
-        print(temp)
-        # print(temp[0])
-        # print(temp[1])
-    for line in f:
-        line_count += 1
+        key = temp[0]
+        TSS = int(temp[1])
+        TES = int(temp[2])
+        hashMapTSS[key].append([TSS, TES, 0, 0])
+print(hashMapTSS)
 
 #go through BigWig file and create hashmap where key is chromosome and value is a list
 #list has 4 values: [TSS, TES, # Pol II in TSS, # Pol II in TES]
