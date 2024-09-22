@@ -26,7 +26,14 @@ print(f"Header Details: {bw.header()}")
 # Display the first few intervals from the first chromosome
 print("\nFirst few intervals:")
 for key in bw.chroms():
-    print(key)
+    chromosome = key
+    for elem in hashMapTSS[chromosome]:
+        try:
+            intervals = bw.intervals(chromosome, elem[0]-1, elem[1]-300)
+            for interval in intervals[:10]:
+                print(interval)
+        except Exception as e:
+            print(f"Error fetching intervals: {e}")
 # Replace 'chr1' with the appropriate chromosome name present in your BigWig file
 # chromosome = list(bw.chroms().keys())[0]  # Get the first chromosome in the file
 # try:
