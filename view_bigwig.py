@@ -21,7 +21,7 @@ with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/se
 print(hashMapTSS.keys())
 
 #go through BigWig file and create hashmap where key is chromosome and value is a list
-#list has 4 values: [TSS, TES, # Pol II in TSS, # Pol II in TES]
+#list has 6 values: [TSS, TES, # Pol II in TSS, # Pol II in TES, strand, geneID]
 
 print(f"Total number of lines: {line_count}")
 print("Header Information:")
