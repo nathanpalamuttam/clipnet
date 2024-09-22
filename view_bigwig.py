@@ -1,9 +1,11 @@
 import pyBigWig
-
+import gzip
 # Open the BigWig file
 bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
-bw1 = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz")
-# Print header information
+with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz", 'rt') as f:
+    # Read the first few lines to get the header
+    for _ in range(5):  # adjust the range as needed to see more lines
+        print(f.readline().strip())# Print header information
 print("Header Information:")
 print(f"Chromosomes: {bw.chroms()}")
 print(f"Header Details: {bw.header()}")
