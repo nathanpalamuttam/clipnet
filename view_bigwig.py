@@ -4,6 +4,8 @@ import pyBigWig
 import gzip
 # Open the BigWig file
 bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
+bw_neg = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_minus_merged.bw")
+
 line_count = 0
 hashMapTSS = defaultdict(list)
 #this is the TSS start and end sites
@@ -36,7 +38,7 @@ for chromosome in bw.chroms():
                 if strand == '+':
                     intervals = bw.intervals(chromosome, TSS - 150, TES - 300)
                 else:
-                    intervals = bw.intervals(chromosome, TSS + 300, TES + 150)
+                    continue
                 if intervals:
                     for interval in intervals:
                         if strand == '+':
@@ -44,15 +46,27 @@ for chromosome in bw.chroms():
                                 elem[2] += 1
                             else:
                                 elem[3] += 1
-                        else:
+            except Exception as e:
+                print(f"Error fetching intervals: {e}")
+
+for chromosome in bw_neg.chroms():
+    if chromosome in hashMapTSS:
+        for elem in hashMapTSS[chromosome]:
+            try:
+                TSS = elem[0]
+                TES = elem[1]
+                strand = elem[4]
+                if strand == '-':
+                    intervals = bw.intervals(chromosome, TSS + 300, TES + 150)
+                if intervals:
+                    for interval in intervals:
+                        if strand == '-':
                             if interval[0] >= TES - 150:
                                 elem[2] += 1
                             else:
                                 elem[3] += 1
             except Exception as e:
                 print(f"Error fetching intervals: {e}")
-
-
 output_file = "/home2/npp8/data/hashMapTSS.pkl"
 with open(output_file, 'wb') as file:
     pickle.dump(hashMapTSS, file)
