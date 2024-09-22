@@ -3,13 +3,17 @@ import gzip
 # Open the BigWig file
 bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
 line_count = 0
-
+hashMapTSS = {}
 #this is the TSS start and end sites
 with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz", 'rt') as f:
     for _ in range(5):  # adjust the range as needed to see more lines
-        print(f.readline().strip())
+        print(f.readline()[0])
+        print(f.readline()[1])
     for line in f:
         line_count += 1
+
+#go through BigWig file and create hashmap where key is chromosome and value is a list
+#list has 4 values: [TSS, TES, # Pol II in TSS, # Pol II in TES]
 
 print(f"Total number of lines: {line_count}")
 print("Header Information:")
