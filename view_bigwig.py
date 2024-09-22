@@ -7,9 +7,10 @@ hashMapTSS = {}
 #this is the TSS start and end sites
 with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz", 'rt') as f:
     for _ in range(5):  # adjust the range as needed to see more lines
-        temp = f.readline().split(" ")
-        print(temp[0])
-        print(temp[1])
+        temp = f.readline().split("")
+        print(temp)
+        # print(temp[0])
+        # print(temp[1])
     for line in f:
         line_count += 1
 
