@@ -4,13 +4,13 @@ import gzip
 bw = pyBigWig.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/Seq_dedup_QC_end_plus_merged.bw")
 line_count = 0
 
-# Open the gzip-compressed BED file
+#this is the TSS start and end sites
 with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz", 'rt') as f:
-    # Iterate through each line and increment the counter
+    for _ in range(5):  # adjust the range as needed to see more lines
+        print(f.readline().strip())
     for line in f:
         line_count += 1
 
-# Print the total number of lines (records)
 print(f"Total number of lines: {line_count}")
 print("Header Information:")
 print(f"Chromosomes: {bw.chroms()}")
