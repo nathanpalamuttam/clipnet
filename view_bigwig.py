@@ -13,7 +13,11 @@ with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/se
         key = temp[0]
         TSS = int(temp[1])
         TES = int(temp[2])
-        hashMapTSS[key].append([TSS, TES, 0, 0])
+        strand = temp[4]
+        if strand == '+':
+            hashMapTSS[key].append([TSS, TES, 0, 0])
+        else:
+            hashMapTSS[key].append([TES, TSS, 0, 0])
 print(hashMapTSS.keys())
 
 #go through BigWig file and create hashmap where key is chromosome and value is a list
