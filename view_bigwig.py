@@ -7,8 +7,8 @@ line_count = 0
 hashMapTSS = defaultdict(list)
 #this is the TSS start and end sites
 with gzip.open("/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/denr_greater_than_1rpb_tx.bed.gz", 'rt') as f:
-    for _ in range(5):  # adjust the range as needed to see more lines
-        temp = f.readline().split("\t")
+    for line in f:  # adjust the range as needed to see more lines
+        temp = line.strip().split("\t")
         key = temp[0]
         TSS = int(temp[1])
         TES = int(temp[2])
