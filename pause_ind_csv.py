@@ -14,7 +14,7 @@ with open(output_csv, 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile)
     
     # Write the header to the CSV file
-    csv_writer.writerow(['Key', 'GeneID', 'Pol II Ratio (TSS / TES)'])
+    csv_writer.writerow(['Key', 'GeneID', 'Pol II Ratio (TSS / TES)', 'Strand'])
     
     # Iterate through the hashmap to extract required values
     for key, entries in hashMapTSS.items():
@@ -32,6 +32,6 @@ with open(output_csv, 'w', newline='') as csvfile:
                 print(strand)
             
             # Write the row to the CSV file
-            #csv_writer.writerow([key, gene_id, ratio])
+            csv_writer.writerow([key, gene_id, ratio, strand])
 
 print(f"Data successfully written to {output_csv}")
