@@ -31,6 +31,10 @@ with open(output_csv, 'w', newline='') as csvfile:
                 denominator = (pol_ii_tes - 300) - (pol_ii_tss + 150)
                 if denominator != 0:
                     ratio = (pol_ii_tss / 300) / (pol_ii_tes / denominator)
+                    if ratio < 0:
+                        print(pol_ii_tss)
+                        print(pol_ii_tes)
+                        print()
                 else:
                     ratio = 'undefined'  # or some other handling for this specific case
             else:
