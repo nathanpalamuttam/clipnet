@@ -39,8 +39,8 @@ with open(output_csv, 'w', newline='') as csvfile:
                     ratio = 'undefined'  # or some other handling for this specific case
             else:
                 ratio = 'undefined' 
-            if ratio == 'undefined' or ratio == 0:
-                print(strand)
+            # if ratio == 'undefined' or ratio == 0:
+            #     print(strand)
             
             # Write the row to the CSV file
             csv_writer.writerow([key, gene_id, ratio, strand, TSS, TES])
