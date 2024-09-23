@@ -27,7 +27,14 @@ with open(output_csv, 'w', newline='') as csvfile:
             gene_id = entry[5]
             
             # Calculate the ratio, handling the case where TES count is 0 to avoid division by zero
-            ratio = (pol_ii_tss/ 300) / (pol_ii_tes / ((pol_ii_tes - 300) - (pol_ii_tss + 150))) if pol_ii_tes != 0 else 'undefined'
+            if pol_ii_tes != 0:
+                denominator = (pol_ii_tes - 300) - (pol_ii_tss + 150)
+                if denominator != 0:
+                    ratio = (pol_ii_tss / 300) / (pol_ii_tes / denominator)
+                else:
+                    ratio = 'undefined'  # or some other handling for this specific case
+            else:
+                ratio = 'undefined' 
             if ratio == 'undefined' or ratio == 0:
                 print(strand)
             
