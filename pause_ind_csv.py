@@ -34,7 +34,7 @@ with open(output_csv, 'w', newline='') as csvfile:
                     if ratio < 0:
                         print(pol_ii_tss)
                         print(pol_ii_tes)
-                        print(ratio)
+                        print(denominator)
                         print()
                 else:
                     ratio = 'undefined'  # or some other handling for this specific case
