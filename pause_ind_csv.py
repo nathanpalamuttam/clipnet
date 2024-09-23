@@ -28,7 +28,7 @@ with open(output_csv, 'w', newline='') as csvfile:
             
             # Calculate the ratio, handling the case where TES count is 0 to avoid division by zero
             if pol_ii_tes != 0:
-                denominator = (pol_ii_tes - 300) - (pol_ii_tss + 150)
+                denominator = (TES - 300) - (TSS + 150)
                 if denominator != 0:
                     ratio = (pol_ii_tss / 300) / (pol_ii_tes / denominator)
                     if ratio < 0:
