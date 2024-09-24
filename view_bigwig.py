@@ -30,29 +30,34 @@ for i in range(2, 8):
     print("Header Information:")
     print(f"Chromosomes: {bw.chroms()}")
     print(f"Header Details: {bw.header()}")
-
+    chrom_sizes = bw.chroms()
     for chromosome in bw.chroms():
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
                 try:
-                    TSS = elem[0]
-                    TES = elem[1]
-                    strand = elem[4]
+                    promoter_start = max(TSS - 150, 0)  # Ensure start is not less than 0
+                    promoter_end = min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
+                    gene_body_start = min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
+                    gene_body_end = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+
                     if strand == '+':
-                        elem[2] = bw.stats(chromosome, TSS - 150, TSS + 150) #promoter
-                        elem[3] = bw.stats(chromosome, TSS+300, TES-300) #gene body
+                        # Check if intervals are valid before querying stats
+                        if promoter_start < promoter_end:
+                            elem[2] = bw.stats(chromosome, promoter_start, promoter_end)[0]  # Get Pol II in TSS
+                        if gene_body_start < gene_body_end:
+                            elem[3] = bw.stats(chromosome, gene_body_start, gene_body_end)[0]
                     else:
                         continue
-                    # if intervals:
-                    #     for interval in intervals:
-                    #         if strand == '+':
-                    #             if interval[0] <= elem[0] + 150:
-                    #                 elem[2] += 1
-                    #             else:
-                    #                 elem[3] += 1
+                # if intervals:
+                #     for interval in intervals:
+                #         if strand == '+':
+                #             if interval[0] <= elem[0] + 150:
+                #                 elem[2] += 1
+                #             else:
+                #                 elem[3] += 1
                 except Exception as e:
                     print(f"Error fetching intervals: {e}")
-
+    print("DONE")
     for chromosome in bw_neg.chroms():
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
@@ -108,7 +113,7 @@ for i in range(2, 8):
                 
                 # Calculate the ratio, handling the case where TES count is 0 to avoid division by zero
                 if pol_ii_tes != 0:
-                   
+                    
                     ratio = (pol_ii_tss) / (pol_ii_tes)
                 else:
                     ratio = 'undefined'  # or some other handling for this specific case
