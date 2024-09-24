@@ -122,7 +122,7 @@ for i in range(2, 8):
                 gene_id = entry[5]
                 
                 # Calculate the ratio, handling the case where TES count is 0 to avoid division by zero
-                if pol_ii_tes != 0:
+                if pol_ii_tes != 0 and pol_ii_tss is not None and pol_ii_tes is not None:
                     
                     ratio = (pol_ii_tss) / (pol_ii_tes)
                 else:
