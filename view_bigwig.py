@@ -98,7 +98,7 @@ for i in range(2, 8):
 
 
     input_file = f"/home2/npp8/data/seq{i}.pkl"
-    output_csv = f"/home2/npp8/data/seq{i}_pause_index.csv"
+    output_csv = f"/home2/npp8/data/seq{i}_pause_index_run2.csv"
 
     # Load the pickle object
     with open(input_file, 'rb') as file:
