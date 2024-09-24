@@ -58,6 +58,7 @@ for i in range(2, 8):
                 except Exception as e:
                     print(f"Error fetching intervals: {e}")
     print("DONE")
+    chrom_sizes_neg = bw_neg.chroms() 
     for chromosome in bw_neg.chroms():
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
@@ -65,11 +66,20 @@ for i in range(2, 8):
                     TSS = elem[0]
                     TES = elem[1]
                     strand = elem[4]
+
+                    # Define intervals with boundary checks for negative strand
+                    promoter_start_neg = max(TES - 150, 0)  # Ensure start is not less than 0
+                    promoter_end_neg = min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
+                    gene_body_start_neg = min(TSS + 300, chrom_sizes_neg[chromosome] )  # Start of gene body
+                    gene_body_end_neg = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+
                     if strand == '-':
-                        elem[2] = bw.stats(chromosome, TES - 150, TES + 150) #promoter
-                        elem[3] = bw.stats(chromosome, TSS+300, TES-300) #gene body
-                    else:
-                        continue
+                        # Check if intervals are valid before querying stats
+                        if promoter_start_neg < promoter_end_neg:
+                            elem[2] = bw_neg.stats(chromosome, promoter_start_neg, promoter_end_neg)[0]  # Pol II in promoter
+                        if gene_body_start_neg < gene_body_end_neg:
+                            elem[3] = bw_neg.stats(chromosome, gene_body_start_neg, gene_body_end_neg)[0]  # Pol II in gene body
+
                     # if intervals:
                     #     for interval in intervals:
                     #         if strand == '-':
