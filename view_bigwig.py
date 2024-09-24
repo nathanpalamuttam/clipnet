@@ -60,7 +60,9 @@ for i in range(2, 8):
                     TES = elem[1]
                     strand = elem[4]
                     if strand == '-':
-                        intervals = bw.intervals(chromosome, TSS + 300, TES + 150)
+                        intervals = bw_neg.intervals(chromosome, TSS + 300, TES + 150)
+                    else:
+                        continue
                     if intervals:
                         for interval in intervals:
                             if strand == '-':
@@ -78,8 +80,8 @@ for i in range(2, 8):
     bw.close()
 
 
-    input_file = "/home2/npp8/data/seq{i}.pkl"
-    output_csv = "/home2/npp8/data/seq{i}_pause_index.csv"
+    input_file = f"/home2/npp8/data/seq{i}.pkl"
+    output_csv = f"/home2/npp8/data/seq{i}_pause_index.csv"
 
     # Load the pickle object
     with open(input_file, 'rb') as file:
