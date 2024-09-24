@@ -39,16 +39,17 @@ for i in range(2, 8):
                     TES = elem[1]
                     strand = elem[4]
                     if strand == '+':
-                        intervals = bw.intervals(chromosome, TSS - 150, TES - 300)
+                        elem[2] = bw.stats(chromosome, TSS - 150, TSS + 150) #promoter
+                        elem[3] = bw.stats(chromosome, TSS+300, TES-300) #gene body
                     else:
                         continue
-                    if intervals:
-                        for interval in intervals:
-                            if strand == '+':
-                                if interval[0] <= elem[0] + 150:
-                                    elem[2] += 1
-                                else:
-                                    elem[3] += 1
+                    # if intervals:
+                    #     for interval in intervals:
+                    #         if strand == '+':
+                    #             if interval[0] <= elem[0] + 150:
+                    #                 elem[2] += 1
+                    #             else:
+                    #                 elem[3] += 1
                 except Exception as e:
                     print(f"Error fetching intervals: {e}")
 
@@ -60,16 +61,17 @@ for i in range(2, 8):
                     TES = elem[1]
                     strand = elem[4]
                     if strand == '-':
-                        intervals = bw_neg.intervals(chromosome, TSS + 300, TES + 150)
+                        elem[2] = bw.stats(chromosome, TES - 150, TES + 150) #promoter
+                        elem[3] = bw.stats(chromosome, TSS+300, TES-300) #gene body
                     else:
                         continue
-                    if intervals:
-                        for interval in intervals:
-                            if strand == '-':
-                                if interval[0] >= TES - 150:
-                                    elem[2] += 1
-                                else:
-                                    elem[3] += 1
+                    # if intervals:
+                    #     for interval in intervals:
+                    #         if strand == '-':
+                    #             if interval[0] >= TES - 150:
+                    #                 elem[2] += 1
+                    #             else:
+                    #                 elem[3] += 1
                 except Exception as e:
                     print(f"Error fetching intervals: {e}")
     output_file = f"/home2/npp8/data/seq{i}.pkl"
@@ -106,18 +108,11 @@ for i in range(2, 8):
                 
                 # Calculate the ratio, handling the case where TES count is 0 to avoid division by zero
                 if pol_ii_tes != 0:
-                    denominator = (TES - 300) - (TSS + 150)
-                    if denominator != 0:
-                        ratio = (pol_ii_tss / 300) / (pol_ii_tes / denominator)
-                        if ratio < 0:
-                            print(pol_ii_tss)
-                            print(pol_ii_tes)
-                            print(denominator)
-                            print()
-                    else:
-                        ratio = 'undefined'  # or some other handling for this specific case
+                   
+                    ratio = (pol_ii_tss) / (pol_ii_tes)
                 else:
-                    ratio = 'undefined' 
+                    ratio = 'undefined'  # or some other handling for this specific case
+                
                 # if ratio == 'undefined' or ratio == 0:
                 #     print(strand)
                 
