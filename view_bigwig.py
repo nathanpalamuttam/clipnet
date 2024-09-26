@@ -35,6 +35,8 @@ for i in range(2, 8):
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
                 try:
+                    TSS = elem[0]
+                    TES = elem[1]
                     promoter_start = TSS - 150 #max(TSS - 150, 0)  # Ensure start is not less than 0
                     promoter_end = TSS + 150 #min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
                     gene_body_start = TSS + 300 #min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
