@@ -39,7 +39,7 @@ for i in range(2, 8):
                     promoter_end = TSS + 150 #min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
                     gene_body_start = TSS + 300 #min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
                     gene_body_end = TES - 300 #max(TES - 300, 0)  # End of gene body, ensuring it's not negative
-
+                    strand = elem[4]
                     if strand == '+':
                         # Check if intervals are valid before querying stats
                         print()
