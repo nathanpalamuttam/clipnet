@@ -73,8 +73,8 @@ for i in range(2, 8):
                     # Define intervals with boundary checks for negative strand
                     promoter_start_neg = max(TES - 150, 0)  # Ensure start is not less than 0
                     promoter_end_neg = min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
-                    gene_body_start_neg = min(TSS + 300, chrom_sizes_neg[chromosome] )  # Start of gene body
-                    gene_body_end_neg = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+                    gene_body_start_neg = TSS + 300  # Start of gene body
+                    gene_body_end_neg = TES - 300  # End of gene body, ensuring it's not negative
 
                     if strand == '-':
                         # Check if intervals are valid before querying stats
