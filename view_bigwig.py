@@ -35,6 +35,8 @@ for i in range(2, 8):
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
                 try:
+                    print(elem)
+                    print()
                     TSS = elem[0]
                     TES = elem[1]
                     strand = elem[4]
