@@ -35,10 +35,10 @@ for i in range(2, 8):
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
                 try:
-                    promoter_start = max(TSS - 150, 0)  # Ensure start is not less than 0
-                    promoter_end = min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
-                    gene_body_start = min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
-                    gene_body_end = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+                    promoter_start = TSS - 150 #max(TSS - 150, 0)  # Ensure start is not less than 0
+                    promoter_end = TSS + 150 #min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
+                    gene_body_start = TSS + 300 #min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
+                    gene_body_end = TES - 300 #max(TES - 300, 0)  # End of gene body, ensuring it's not negative
 
                     if strand == '+':
                         # Check if intervals are valid before querying stats
@@ -68,10 +68,10 @@ for i in range(2, 8):
                     strand = elem[4]
 
                     # Define intervals with boundary checks for negative strand
-                    promoter_start_neg = max(TES - 150, 0)  # Ensure start is not less than 0
-                    promoter_end_neg = min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
-                    gene_body_start_neg = min(TSS + 300, chrom_sizes_neg[chromosome] )  # Start of gene body
-                    gene_body_end_neg = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+                    promoter_start_neg = TES - 150 #max(TES - 150, 0)  # Ensure start is not less than 0
+                    promoter_end_neg = TES + 150 #min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
+                    gene_body_start_neg = TSS + 300 #min(TSS + 300, chrom_sizes_neg[chromosome] )  # Start of gene body
+                    gene_body_end_neg = TES - 300 #max(TES - 300, 0)  # End of gene body, ensuring it's not negative
 
                     if strand == '-':
                         # Check if intervals are valid before querying stats
