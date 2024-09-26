@@ -35,7 +35,7 @@ for i in range(2, 8):
         if chromosome in hashMapTSS:
             for elem in hashMapTSS[chromosome]:
                 try:
-                    print(elem)
+                    
                     print()
                     TSS = elem[0]
                     TES = elem[1]
@@ -46,6 +46,8 @@ for i in range(2, 8):
                     gene_body_end = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
                     
                     if strand == '+':
+                        print(elem)
+                        print(bw.stats(chromosome, promoter_start, promoter_end))
                         # Check if intervals are valid before querying stats
                         #print(bw.intervals(chromosome, TSS - 150, TES - 300))
                         #print(bw.stats(chromosome, promoter_start, promoter_end, type = 'mean'))
