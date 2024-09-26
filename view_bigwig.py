@@ -42,8 +42,7 @@ for i in range(2, 8):
                     strand = elem[4]
                     if strand == '+':
                         # Check if intervals are valid before querying stats
-                        print()
-                        print()
+                        print(bw.intervals(chromosome, TSS - 150, TES - 300))
                         print(bw.stats(chromosome, promoter_start, promoter_end))
                         elem[2] = bw.stats(chromosome, promoter_start, promoter_end)[0]  # Get Pol II in TSS
                         elem[3] = bw.stats(chromosome, gene_body_start, gene_body_end)[0]
