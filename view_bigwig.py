@@ -51,8 +51,8 @@ for i in range(2, 8):
                         # Check if intervals are valid before querying stats
                         #print(bw.intervals(chromosome, TSS - 150, TES - 300))
                         #print(bw.stats(chromosome, promoter_start, promoter_end, type = 'mean'))
-                        elem[2] = bw.stats(chromosome, promoter_start, promoter_end)[0]  # Get Pol II in TSS
-                        elem[3] = bw.stats(chromosome, gene_body_start, gene_body_end)[0]
+                        elem[2] = bw.stats(chromosome, promoter_start, promoter_end, type = 'mean')[0]  # Get Pol II in TSS
+                        elem[3] = bw.stats(chromosome, gene_body_start, gene_body_end, type = 'mean')[0]
                     else:
                         continue
                 # if intervals:
