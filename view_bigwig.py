@@ -61,10 +61,11 @@ for i in range(2, 8):
                 #             else:
                 #                 elem[3] += 1
                 except Exception as e:
+                    print(f"Error fetching intervals: {e}")
                     print(elem)
                     print(bw.stats(chromosome, promoter_start, promoter_end))
                     print(bw.stats(chromosome, gene_body_start, gene_body_end))
-                    print(f"Error fetching intervals: {e}")
+                    #print(f"Error fetching intervals: {e}")
     print("DONE")
     chrom_sizes_neg = bw_neg.chroms() 
     for chromosome in bw_neg.chroms():
