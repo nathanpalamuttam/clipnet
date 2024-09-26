@@ -37,6 +37,8 @@ for i in range(2, 8):
                 try:
                     TSS = elem[0]
                     TES = elem[1]
+                    if TES - TSS <= 2000:
+                        continue
                     strand = elem[4]
                     promoter_start = max(TSS - 150, 0)  # Ensure start is not less than 0
                     promoter_end = min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
@@ -75,7 +77,8 @@ for i in range(2, 8):
                     TSS = elem[0]
                     TES = elem[1]
                     strand = elem[4]
-
+                    if TES - TSS <= 2000:
+                        continue
                     # Define intervals with boundary checks for negative strand
                     promoter_start_neg = max(TES - 150, 0)  # Ensure start is not less than 0
                     promoter_end_neg = min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
