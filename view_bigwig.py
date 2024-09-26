@@ -37,15 +37,16 @@ for i in range(2, 8):
                 try:
                     TSS = elem[0]
                     TES = elem[1]
-                    promoter_start = TSS - 150 #max(TSS - 150, 0)  # Ensure start is not less than 0
-                    promoter_end = TSS + 150 #min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
-                    gene_body_start = TSS + 300 #min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
-                    gene_body_end = TES - 300 #max(TES - 300, 0)  # End of gene body, ensuring it's not negative
                     strand = elem[4]
+                    promoter_start = max(TSS - 150, 0)  # Ensure start is not less than 0
+                    promoter_end = min(TSS + 150, chrom_sizes[chromosome] )  # Ensure end is within chromosome length
+                    gene_body_start = min(TSS + 300, chrom_sizes[chromosome] )  # Start of gene body
+                    gene_body_end = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+                    
                     if strand == '+':
                         # Check if intervals are valid before querying stats
                         #print(bw.intervals(chromosome, TSS - 150, TES - 300))
-                        print(bw.stats(chromosome, promoter_start, promoter_end, type = 'mean'))
+                        #print(bw.stats(chromosome, promoter_start, promoter_end, type = 'mean'))
                         elem[2] = bw.stats(chromosome, promoter_start, promoter_end)[0]  # Get Pol II in TSS
                         elem[3] = bw.stats(chromosome, gene_body_start, gene_body_end)[0]
                     else:
@@ -70,17 +71,15 @@ for i in range(2, 8):
                     strand = elem[4]
 
                     # Define intervals with boundary checks for negative strand
-                    promoter_start_neg = TES - 150 #max(TES - 150, 0)  # Ensure start is not less than 0
-                    promoter_end_neg = TES + 150 #min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
-                    gene_body_start_neg = TSS + 300 #min(TSS + 300, chrom_sizes_neg[chromosome] )  # Start of gene body
-                    gene_body_end_neg = TES - 300 #max(TES - 300, 0)  # End of gene body, ensuring it's not negative
+                    promoter_start_neg = max(TES - 150, 0)  # Ensure start is not less than 0
+                    promoter_end_neg = min(TES + 150, chrom_sizes_neg[chromosome] )  # Ensure end is within chromosome length
+                    gene_body_start_neg = min(TSS + 300, chrom_sizes_neg[chromosome] )  # Start of gene body
+                    gene_body_end_neg = max(TES - 300, 0)  # End of gene body, ensuring it's not negative
 
                     if strand == '-':
                         # Check if intervals are valid before querying stats
-                        if promoter_start_neg < promoter_end_neg:
-                            elem[2] = bw_neg.stats(chromosome, promoter_start_neg, promoter_end_neg)[0]  # Pol II in promoter
-                        if gene_body_start_neg < gene_body_end_neg:
-                            elem[3] = bw_neg.stats(chromosome, gene_body_start_neg, gene_body_end_neg)[0]  # Pol II in gene body
+                        elem[2] = bw_neg.stats(chromosome, promoter_start_neg, promoter_end_neg)[0]  # Pol II in promoter
+                        elem[3] = bw_neg.stats(chromosome, gene_body_start_neg, gene_body_end_neg)[0]  # Pol II in gene body
 
                     # if intervals:
                     #     for interval in intervals:
