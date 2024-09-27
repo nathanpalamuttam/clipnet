@@ -15,7 +15,7 @@ bed_third_column = []
 count = 0
 # Open and read the .bed.gz file
 with gzip.open(bed_file, 'rt') as f:
-    for line in f:
+    for line_num, line in enumerate(f, start=1):
         fields = line.strip().split()
         
         if len(fields) >= 8:
