@@ -19,7 +19,7 @@ with gzip.open(bed_file, 'rt') as f:
         fields = line.strip().split()
         if len(fields) >= 3:
             try:
-                value = float(fields[2])  # Convert the third column to float
+                value = float(fields[7])  # Convert the third column to float
                 bed_third_column.append(value)
             except ValueError:
                 continue  # Skip lines where the conversion fails
