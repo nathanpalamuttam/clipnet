@@ -15,7 +15,7 @@ for i in range(2,8):
     csv_third_column = csv_third_column.dropna()
 
     # Step 2: Read the .bed.gz file and extract the third column
-    bed_file = '/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
+    bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
     bed_third_column = []
     count = 0
     # Open and read the .bed.gz file
