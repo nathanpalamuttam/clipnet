@@ -17,11 +17,12 @@ count = 0
 with gzip.open(bed_file, 'rt') as f:
     for line in f:
         fields = line.strip().split()
-        count += 1
-        if count <5 :
-            print(fields)
+        
         if len(fields) >= 7:
             try:
+                count += 1
+                if count <5 :
+                    print(fields)
                 value = float(fields[7])  # Convert the third column to float
                 bed_third_column.append(value)
             except ValueError:
