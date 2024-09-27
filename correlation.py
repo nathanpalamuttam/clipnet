@@ -36,7 +36,7 @@ with gzip.open(bed_file, 'rt') as f:
 
 print(mean(csv_third_column))
 print()
-print(mean(bed_third_column[:5]))
+print(mean(bed_third_column))
 # Convert bed third column to a pandas Series
 bed_third_column = pd.Series(bed_third_column)
 
