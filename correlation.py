@@ -12,11 +12,14 @@ csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')  # Conver
 # Step 2: Read the .bed.gz file and extract the third column
 bed_file = '/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_3_pausing_index.bed.gz'
 bed_third_column = []
-
+count = 0
 # Open and read the .bed.gz file
 with gzip.open(bed_file, 'rt') as f:
     for line in f:
         fields = line.strip().split()
+        count += 1
+        if count <5 :
+            print(fields)
         if len(fields) >= 3:
             try:
                 value = float(fields[6])  # Convert the third column to float
