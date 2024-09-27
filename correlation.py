@@ -7,8 +7,11 @@ csv_file = '/home2/npp8/data/seq3_pause_index_run2.csv'
 csv_data = pd.read_csv(csv_file)
 
 # Filter out rows where the third column is "undefined"
-csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')  # Convert to numeric, NaNs for invalid values
+csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
 
+# Drop rows with NaN values to skip rows that had 'undefined'
+csv_third_column = csv_third_column.dropna()
+print(csv_third_column[:5])
 # Step 2: Read the .bed.gz file and extract the third column
 bed_file = '/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_3_pausing_index.bed.gz'
 bed_third_column = []
