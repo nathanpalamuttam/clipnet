@@ -5,7 +5,7 @@ from scipy.stats import pearsonr
 
 # Step 1: Read the CSV file and extract the third column, ignoring "undefined" values
 for i in range(2,8):
-    csv_file = f'/home2/npp8/data/seq3_pause_index_run{i}.csv'
+    csv_file = f'/home2/npp8/data/seq{i}_pause_index_run_2.csv'
     csv_data = pd.read_csv(csv_file)
 
     # Filter out rows where the third column is "undefined"
