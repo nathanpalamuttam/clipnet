@@ -99,7 +99,7 @@ for chromosome in bw_neg.chroms():
                 #                 elem[3] += 1
             except Exception as e:
                 print(f"Error fetching intervals: {e}")
-output_file = f"/home2/npp8/data/seq{i}_run2.pkl"
+output_file = f"/home2/npp8/data/seq_merged_run2.pkl"
 with open(output_file, 'wb') as file:
     pickle.dump(hashMapTSS, file)
 
@@ -107,8 +107,8 @@ print(f"hashMapTSS has been successfully saved to {output_file}")
 bw.close()
 
 
-input_file = f"/home2/npp8/data/seq{i}_run2.pkl"
-output_csv = f"/home2/npp8/data/seq{i}_pause_index_run2.csv"
+input_file = f"/home2/npp8/data/seq_merged_run2.pkl"
+output_csv = f"/home2/npp8/data/seq_merged_run2.csv"
 
 # Load the pickle object
 with open(input_file, 'rb') as file:
