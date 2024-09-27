@@ -1,3 +1,4 @@
+from statistics import mean
 import pandas as pd
 import gzip
 from scipy.stats import pearsonr
@@ -33,9 +34,9 @@ with gzip.open(bed_file, 'rt') as f:
         else:
             print(f"IndexError on line {line_num}: {fields} (fields length: {len(fields)})")
 
-print(csv_third_column[:5])
+print(mean(csv_third_column))
 print()
-print(bed_third_column[:5])
+print(mean(bed_third_column[:5]))
 # Convert bed third column to a pandas Series
 bed_third_column = pd.Series(bed_third_column)
 
