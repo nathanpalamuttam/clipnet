@@ -18,7 +18,7 @@ with gzip.open(bed_file, 'rt') as f:
     for line in f:
         fields = line.strip().split()
         
-        if len(fields) >= 7:
+        if len(fields) >= 8:
             try:
                 count += 1
                 if count <5 :
