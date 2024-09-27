@@ -27,6 +27,8 @@ with gzip.open(bed_file, 'rt') as f:
                 bed_third_column.append(value)
             except ValueError:
                 continue  # Skip lines where the conversion fails
+        else:
+            print(f"IndexError on line {line_num}: {fields} (fields length: {len(fields)})")
 
 # Convert bed third column to a pandas Series
 bed_third_column = pd.Series(bed_third_column)
