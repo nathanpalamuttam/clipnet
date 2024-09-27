@@ -11,7 +11,7 @@ csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
 
 # Drop rows with NaN values to skip rows that had 'undefined'
 csv_third_column = csv_third_column.dropna()
-print(csv_third_column[:5])
+
 # Step 2: Read the .bed.gz file and extract the third column
 bed_file = '/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_3_pausing_index.bed.gz'
 bed_third_column = []
@@ -33,6 +33,9 @@ with gzip.open(bed_file, 'rt') as f:
         else:
             print(f"IndexError on line {line_num}: {fields} (fields length: {len(fields)})")
 
+print(csv_third_column[:5])
+print()
+print(bed_third_column[:5])
 # Convert bed third column to a pandas Series
 bed_third_column = pd.Series(bed_third_column)
 
