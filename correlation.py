@@ -1,3 +1,4 @@
+import math
 from statistics import mean
 import pandas as pd
 import gzip
@@ -39,13 +40,15 @@ for i in range(2, 8):
     clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
     clean_data.columns = ['csv_col', 'bed_col']
     count = 0
+    epsilon = 1e-5
     for index, row in clean_data.iterrows():
         
-        if row['csv_col'] != row['bed_col']:
+        if not math.isclose(row['csv_col'], row['bed_col'], rel_tol=epsilon, abs_tol=epsilon):
+            print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
             if count == 5:
                 break
             count += 1
-            print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
+            #print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
     #print(clean_data.head())
 
     # Step 3: Calculate Pearson correlation between the two columns
