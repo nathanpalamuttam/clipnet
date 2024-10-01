@@ -40,10 +40,11 @@ for i in range(2, 8):
     clean_data.columns = ['csv_col', 'bed_col']
     count = 0
     for index, row in clean_data.iterrows():
-        # if count == 5:
-        #     break
-        # count += 1
+        
         if row['csv_col'] != row['bed_col']:
+            if count == 5:
+                break
+            count += 1
             print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
     #print(clean_data.head())
 
