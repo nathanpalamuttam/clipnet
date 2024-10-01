@@ -26,7 +26,7 @@ for i in range(2, 8):
             fields = line.strip().split()
             if len(fields) >= 8:
                 try:
-                    value = float(fields[6])  # Extract the 7th column (0-based index = 6)
+                    value = float(fields[7])  # Extract the 7th column (0-based index = 6)
                     bed_seventh_column.append(value)
                 except ValueError:
                     continue  # Skip if conversion fails (e.g., invalid data in this column)
