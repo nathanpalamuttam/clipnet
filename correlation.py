@@ -38,7 +38,11 @@ for i in range(2, 8):
     # Drop rows with NaN values to ensure both columns align properly
     clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
     clean_data.columns = ['csv_col', 'bed_col']
+    count = 0
     for index, row in clean_data.iterrows():
+        if count == 5:
+            break
+        count += 1
         if row['csv_col'] != row['bed_col']:
             print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
     #print(clean_data.head())
