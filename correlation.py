@@ -12,8 +12,8 @@ for i in range(2, 8):
     csv_data = pd.read_csv(csv_file)
     hashMap = defaultdict(list)
     count = 0
-    for line in csv_data:
-        print(line)
+    for index, row in csv_data.iterrows():
+        print(f"Row {index}: {row}")
         count += 1
         if count == 5:
             break
