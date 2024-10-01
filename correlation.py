@@ -11,10 +11,7 @@ for i in range(2, 8):
     
     # Convert third column to numeric and filter out "undefined" or invalid values
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
-    csv_third_column = csv_third_column.dropna()  # Remove NaN values (where the third column had 'undefined')
-    
-    print("CSV Third Column Preview:")
-    print(csv_third_column.head())  # Preview the filtered data
+    csv_third_column = csv_third_column.dropna()
     
     # Step 2: Read the .bed.gz file and extract the seventh column (as this corresponds to your target)
     bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
@@ -34,14 +31,18 @@ for i in range(2, 8):
     # Convert the list to a pandas Series for easier manipulation
     bed_seventh_column = pd.Series(bed_seventh_column)
     
-    print("Mean CSV Third Column:", mean(csv_third_column))
-    print("Mean BED Seventh Column:", mean(bed_seventh_column))
+    # print("Mean CSV Third Column:", mean(csv_third_column))
+    # print("Mean BED Seventh Column:", mean(bed_seventh_column))
     
     # Combine both columns (csv_third_column and bed_seventh_column) into a DataFrame
     # Drop rows with NaN values to ensure both columns align properly
     clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
     clean_data.columns = ['csv_col', 'bed_col']
-    print(clean_data.head())
+    for index, row in clean_data.iterrows():
+        if row['csv_col'] != row['bed_col']:
+            print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
+    #print(clean_data.head())
+
     # Step 3: Calculate Pearson correlation between the two columns
     if len(clean_data) > 1:  # Ensure there's enough data to calculate correlation
         correlation, p_value = pearsonr(clean_data['csv_col'], clean_data['bed_col'])
