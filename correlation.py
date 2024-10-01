@@ -1,3 +1,4 @@
+from collections import defaultdict
 import math
 from statistics import mean
 import pandas as pd
@@ -17,13 +18,17 @@ for i in range(2, 8):
     # Step 2: Read the .bed.gz file and extract the seventh column (as this corresponds to your target)
     bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
     bed_seventh_column = []
-    
+    hashMap = defaultdict(list)
     # Open and read the .bed.gz file, extracting the seventh column (fields[6])
+    count = 0
     with gzip.open(bed_file, 'rt') as f:
         for line_num, line in enumerate(f, start=1):
             fields = line.strip().split()
             if len(fields) >= 8:
                 try:
+                    if count < 5:
+                        print(line)
+                        count += 1
                     value = float(fields[7])  # Extract the 7th column (0-based index = 6)
                     bed_seventh_column.append(value)
                 except ValueError:
@@ -42,7 +47,6 @@ for i in range(2, 8):
     count = 0
     epsilon = 1e-5
     for index, row in clean_data.iterrows():
-        
         if not math.isclose(row['csv_col'], row['bed_col'], rel_tol=epsilon, abs_tol=epsilon):
             print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
             if count == 5:
