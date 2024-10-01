@@ -7,7 +7,7 @@ from scipy.stats import pearsonr
 for i in range(2,8):
     csv_file = f'/home2/npp8/data/seq{i}_pause_index_run2.csv'
     csv_data = pd.read_csv(csv_file)
-
+    print(csv_data.head())
     # Filter out rows where the third column is "undefined"
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
 
@@ -37,16 +37,9 @@ for i in range(2,8):
     print(mean(csv_third_column))
     print()
     print(mean(bed_third_column))
-    # Convert bed third column to a pandas Series
     bed_third_column = pd.Series(bed_third_column)
-
-    # Step 3: Clean the data by aligning and dropping NaN values
-    # Combine both columns into a single DataFrame
-
     clean_data = pd.concat([csv_third_column, bed_third_column], axis=1).dropna()
     clean_data.columns = ['csv_col', 'bed_col']
-
-    # Step 4: Calculate the Pearson correlation
     correlation, p_value = pearsonr(clean_data['csv_col'], clean_data['bed_col'])
 
     print(f'Pearson correlation: {correlation:.4f}, P-value: {p_value:.4e}')
