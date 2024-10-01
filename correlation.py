@@ -41,7 +41,7 @@ for i in range(2, 8):
     # Drop rows with NaN values to ensure both columns align properly
     clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
     clean_data.columns = ['csv_col', 'bed_col']
-    
+    print(clean_data.head())
     # Step 3: Calculate Pearson correlation between the two columns
     if len(clean_data) > 1:  # Ensure there's enough data to calculate correlation
         correlation, p_value = pearsonr(clean_data['csv_col'], clean_data['bed_col'])
