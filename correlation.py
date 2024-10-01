@@ -14,7 +14,8 @@ for i in range(2, 8):
     count = 0
     for index, row in csv_data.iterrows():
         #print(f"Row {index}: {row}")
-        hashMap[row['GeneID']].append(row['Pol II Ratio (TSS / TES)'])
+        if row['Pol II Ratio (TSS / TES)'] != 'undefined':
+            hashMap[row['GeneID']].append(row['Pol II Ratio (TSS / TES)'])
     # Convert third column to numeric and filter out "undefined" or invalid values
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
     csv_third_column = csv_third_column.dropna()
@@ -41,11 +42,15 @@ for i in range(2, 8):
     # Convert the list to a pandas Series for easier manipulation
     bed_seventh_column = pd.Series(bed_seventh_column)
     count =0 
-    for key, val in hashMap.items():
-        print(val)
-        count += 1
-        if count == 5:
-            break
+    column1 = []
+    column2 = []
+
+    for key, value in hashMap.items():
+        column1.append(value[0])  # Values at index 0
+        column2.append(value[1])  # Values at index 1
+
+    # Calculate Pearson correlation
+    correlation, p_value = pearsonr(column1, column2)
     break
     # print("Mean CSV Third Column:", mean(csv_third_column))
     # print("Mean BED Seventh Column:", mean(bed_seventh_column))
