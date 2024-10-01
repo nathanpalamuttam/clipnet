@@ -46,9 +46,11 @@ for i in range(2, 8):
     column2 = []
 
     for key, value in hashMap.items():
-        column1.append(value[0])  # Values at index 0
-        column2.append(value[1])  # Values at index 1
-
+        try:
+            column1.append(value[0])  # Values at index 0
+            column2.append(value[1])  # Values at index 1
+        except:
+            print(value)
     # Calculate Pearson correlation
     correlation, p_value = pearsonr(column1, column2)
     break
