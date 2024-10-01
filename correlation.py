@@ -13,7 +13,7 @@ for i in range(2,8):
 
     # Drop rows with NaN values to skip rows that had 'undefined'
     csv_third_column = csv_third_column.dropna()
-
+    print(csv_third_column.head())
     # Step 2: Read the .bed.gz file and extract the third column
     bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
     bed_third_column = []
@@ -42,6 +42,7 @@ for i in range(2,8):
 
     # Step 3: Clean the data by aligning and dropping NaN values
     # Combine both columns into a single DataFrame
+
     clean_data = pd.concat([csv_third_column, bed_third_column], axis=1).dropna()
     clean_data.columns = ['csv_col', 'bed_col']
 
