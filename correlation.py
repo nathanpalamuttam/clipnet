@@ -15,7 +15,7 @@ for i in range(2, 8):
     for index, row in csv_data.iterrows():
         #print(f"Row {index}: {row}")
         if row['Pol II Ratio (TSS / TES)'] != 'undefined':
-            hashMap[row['GeneID']].append(row['Pol II Ratio (TSS / TES)'])
+            hashMap[row['GeneID']].append(float(row['Pol II Ratio (TSS / TES)']))
     # Convert third column to numeric and filter out "undefined" or invalid values
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
     csv_third_column = csv_third_column.dropna()
