@@ -8,7 +8,7 @@ from scipy.stats import pearsonr
 # Loop through the different files (assumed 6 total in your case)
 for i in range(2, 8):
     # Step 1: Read the CSV file and extract the third column, ignoring "undefined" values
-    csv_file = f'/home2/npp8/data/seq{i}_pause_index_run2.csv'
+    csv_file = f'/home2/npp8/data/seq_merged_run2.csv'
     csv_data = pd.read_csv(csv_file)
     hashMap = defaultdict(list)
     count = 0
@@ -21,7 +21,7 @@ for i in range(2, 8):
     csv_third_column = csv_third_column.dropna()
     
     # Step 2: Read the .bed.gz file and extract the seventh column (as this corresponds to your target)
-    bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
+    bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/merged_pausing_index.bed.gz'
     bed_seventh_column = []
     # Open and read the .bed.gz file, extracting the seventh column (fields[6])
     count = 0
