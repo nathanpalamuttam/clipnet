@@ -14,9 +14,7 @@ for i in range(2, 8):
     count = 0
     for index, row in csv_data.iterrows():
         print(f"Row {index}: {row}")
-        count += 1
-        if count == 5:
-            break
+        hashMap[row['GeneID']].append(row['Pol II Ratio (TSS / TES)'])
     # Convert third column to numeric and filter out "undefined" or invalid values
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
     csv_third_column = csv_third_column.dropna()
@@ -34,7 +32,7 @@ for i in range(2, 8):
                     if count < 5:
                         print(line)
                         count += 1
-                    hashMap[fields[3]] = float(fields[7]) 
+                    hashMap[fields[3]].append(float(fields[7]))
                     value = float(fields[7])  # Extract the 7th column (0-based index = 6)
                     bed_seventh_column.append(value)
                 except ValueError:
@@ -42,28 +40,33 @@ for i in range(2, 8):
     
     # Convert the list to a pandas Series for easier manipulation
     bed_seventh_column = pd.Series(bed_seventh_column)
-    
+    count =0 
+    for key, val in hashMap.items():
+        print(val)
+        count += 1
+        if count == 5:
+            break
     # print("Mean CSV Third Column:", mean(csv_third_column))
     # print("Mean BED Seventh Column:", mean(bed_seventh_column))
     
     # Combine both columns (csv_third_column and bed_seventh_column) into a DataFrame
     # Drop rows with NaN values to ensure both columns align properly
-    clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
-    clean_data.columns = ['csv_col', 'bed_col']
-    count = 0
-    epsilon = 1e-5
-    for index, row in clean_data.iterrows():
-        if not math.isclose(row['csv_col'], row['bed_col'], rel_tol=epsilon, abs_tol=epsilon):
-            print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
-            if count == 5:
-                break
-            count += 1
+    # clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
+    # clean_data.columns = ['csv_col', 'bed_col']
+    # count = 0
+    # epsilon = 1e-5
+    # for index, row in clean_data.iterrows():
+    #     if not math.isclose(row['csv_col'], row['bed_col'], rel_tol=epsilon, abs_tol=epsilon):
+    #         print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
+    #         if count == 5:
+    #             break
+    #         count += 1
             #print(f"Row {index}: csv_col = {row['csv_col']}, bed_col = {row['bed_col']}")
     #print(clean_data.head())
 
     # Step 3: Calculate Pearson correlation between the two columns
-    if len(clean_data) > 1:  # Ensure there's enough data to calculate correlation
-        correlation, p_value = pearsonr(clean_data['csv_col'], clean_data['bed_col'])
-        print(f'Pearson correlation for seq{i}: {correlation:.4f}, P-value: {p_value:.4e}')
-    else:
-        print(f'Not enough data to calculate correlation for seq{i}')
+    # if len(clean_data) > 1:  # Ensure there's enough data to calculate correlation
+    #     correlation, p_value = pearsonr(clean_data['csv_col'], clean_data['bed_col'])
+    #     print(f'Pearson correlation for seq{i}: {correlation:.4f}, P-value: {p_value:.4e}')
+    # else:
+    #     print(f'Not enough data to calculate correlation for seq{i}')
