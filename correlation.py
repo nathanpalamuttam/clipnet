@@ -3,53 +3,48 @@ import pandas as pd
 import gzip
 from scipy.stats import pearsonr
 
-# Step 1: Loop through each seq file
+# Loop through the different files (assumed 6 total in your case)
 for i in range(2, 8):
+    # Step 1: Read the CSV file and extract the third column, ignoring "undefined" values
     csv_file = f'/home2/npp8/data/seq{i}_pause_index_run2.csv'
-    bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
-    
-    # Read the CSV file and extract GeneID and third column (col2 = GeneID, col3 = third column)
     csv_data = pd.read_csv(csv_file)
-    print(csv_data.head())
-
-    # Filter out rows where the third column is "undefined"
-    csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')  # 3rd column
-    csv_gene_id = csv_data.iloc[:, 1]  # 2nd column (GeneID)
-
-    # Drop rows where the 3rd column is NaN
-    csv_cleaned = pd.DataFrame({'GeneID': csv_gene_id, 'csv_col': csv_third_column}).dropna()
-
-    print(csv_cleaned.head())
-
-    # Step 2: Read the .bed.gz file and extract the GeneID and 7th column (col4 = GeneID, col7 = 7th column)
-    bed_gene_id = []
+    
+    # Convert third column to numeric and filter out "undefined" or invalid values
+    csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
+    csv_third_column = csv_third_column.dropna()  # Remove NaN values (where the third column had 'undefined')
+    
+    print("CSV Third Column Preview:")
+    print(csv_third_column.head())  # Preview the filtered data
+    
+    # Step 2: Read the .bed.gz file and extract the seventh column (as this corresponds to your target)
+    bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
     bed_seventh_column = []
     
+    # Open and read the .bed.gz file, extracting the seventh column (fields[6])
     with gzip.open(bed_file, 'rt') as f:
         for line_num, line in enumerate(f, start=1):
             fields = line.strip().split()
-            
             if len(fields) >= 8:
                 try:
-                    # Extract GeneID from col4 (3rd column in BED file) and 7th column value
-                    gene_id = fields[3]  # Adjust the index based on the actual position of GeneID in the .bed file
-                    bed_gene_id.append(gene_id)
-                    value = float(fields[6])  # Convert 7th column to float
+                    value = float(fields[6])  # Extract the 7th column (0-based index = 6)
                     bed_seventh_column.append(value)
                 except ValueError:
-                    continue  # Skip lines where the conversion fails
-
-    # Create a DataFrame for the bed data
-    bed_data = pd.DataFrame({'GeneID': bed_gene_id, 'bed_col': bed_seventh_column})
+                    continue  # Skip if conversion fails (e.g., invalid data in this column)
     
-    print(bed_data.head())
-
-    # Step 3: Merge the two DataFrames on the 'GeneID' column
-    merged_data = pd.merge(csv_cleaned, bed_data, on='GeneID')
+    # Convert the list to a pandas Series for easier manipulation
+    bed_seventh_column = pd.Series(bed_seventh_column)
     
-    print(merged_data.head())
-
-    # Step 4: Perform the correlation between the third column of the CSV and the 7th column of the .bed.gz file
-    correlation, p_value = pearsonr(merged_data['csv_col'], merged_data['bed_col'])
-
-    print(f'Pearson correlation: {correlation:.4f}, P-value: {p_value:.4e}')
+    print("Mean CSV Third Column:", mean(csv_third_column))
+    print("Mean BED Seventh Column:", mean(bed_seventh_column))
+    
+    # Combine both columns (csv_third_column and bed_seventh_column) into a DataFrame
+    # Drop rows with NaN values to ensure both columns align properly
+    clean_data = pd.concat([csv_third_column.reset_index(drop=True), bed_seventh_column.reset_index(drop=True)], axis=1).dropna()
+    clean_data.columns = ['csv_col', 'bed_col']
+    
+    # Step 3: Calculate Pearson correlation between the two columns
+    if len(clean_data) > 1:  # Ensure there's enough data to calculate correlation
+        correlation, p_value = pearsonr(clean_data['csv_col'], clean_data['bed_col'])
+        print(f'Pearson correlation for seq{i}: {correlation:.4f}, P-value: {p_value:.4e}')
+    else:
+        print(f'Not enough data to calculate correlation for seq{i}')
