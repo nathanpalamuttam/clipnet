@@ -54,8 +54,7 @@ for i in range(2, 8):
     # Calculate Pearson correlation
     correlation, p_value = pearsonr(column1, column2)
     print(correlation)
-    print(p_value)
-    break
+    
     # print("Mean CSV Third Column:", mean(csv_third_column))
     # print("Mean BED Seventh Column:", mean(bed_seventh_column))
     
