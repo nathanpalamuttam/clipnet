@@ -10,7 +10,13 @@ for i in range(2, 8):
     # Step 1: Read the CSV file and extract the third column, ignoring "undefined" values
     csv_file = f'/home2/npp8/data/seq{i}_pause_index_run2.csv'
     csv_data = pd.read_csv(csv_file)
-    
+    hashMap = defaultdict(list)
+    count = 0
+    for line in csv_data:
+        print(line)
+        count += 1
+        if count == 5:
+            break
     # Convert third column to numeric and filter out "undefined" or invalid values
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
     csv_third_column = csv_third_column.dropna()
@@ -18,7 +24,6 @@ for i in range(2, 8):
     # Step 2: Read the .bed.gz file and extract the seventh column (as this corresponds to your target)
     bed_file = f'/fs/cbsubscb17/storage/projects/JIA_PROcap/JIA_PROcap_mapping/seq_merged/pausing_index/Seq_{i}_pausing_index.bed.gz'
     bed_seventh_column = []
-    hashMap = defaultdict(list)
     # Open and read the .bed.gz file, extracting the seventh column (fields[6])
     count = 0
     with gzip.open(bed_file, 'rt') as f:
@@ -29,6 +34,7 @@ for i in range(2, 8):
                     if count < 5:
                         print(line)
                         count += 1
+                    hashMap[fields[3]] = float(fields[7]) 
                     value = float(fields[7])  # Extract the 7th column (0-based index = 6)
                     bed_seventh_column.append(value)
                 except ValueError:
