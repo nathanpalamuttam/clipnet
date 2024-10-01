@@ -13,7 +13,7 @@ for i in range(2, 8):
     hashMap = defaultdict(list)
     count = 0
     for index, row in csv_data.iterrows():
-        print(f"Row {index}: {row}")
+        #print(f"Row {index}: {row}")
         hashMap[row['GeneID']].append(row['Pol II Ratio (TSS / TES)'])
     # Convert third column to numeric and filter out "undefined" or invalid values
     csv_third_column = pd.to_numeric(csv_data.iloc[:, 2], errors='coerce')
@@ -46,6 +46,7 @@ for i in range(2, 8):
         count += 1
         if count == 5:
             break
+    break
     # print("Mean CSV Third Column:", mean(csv_third_column))
     # print("Mean BED Seventh Column:", mean(bed_seventh_column))
     
