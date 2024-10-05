@@ -67,7 +67,7 @@ def sample_windows(peaks, window_length, pad, centered=False):
 for i in range(df.shape[0]):
     # perform args.reps samples
     for rep in range(args.reps):
-        chrom, peak_start, peak_stop, name, score, strand = df.iloc[i][:3]
+        chrom, peak_start, peak_stop, name, score, strand = df.iloc[i]
         # pick a random place in the peak to build a window around
         window_init = random.randrange(peak_start, peak_stop + 1)
         # pick a random start point of the window
