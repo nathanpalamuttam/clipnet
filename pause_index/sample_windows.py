@@ -82,7 +82,7 @@ for i in range(df.shape[0]):
             print(row)
         else:
             # clear file
-            with open(args.out, "w+") as out:
-                out.write("")
+            # with open(args.out, "w+") as out:
+            #     out.write("")
             with open(args.out, "a") as out:
                 out.write(row + "\n")
