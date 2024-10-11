@@ -51,8 +51,8 @@ def pausing_index(
         ]
     else:
         raise ValueError("Strand must be either '+' or '-'")
-    promoter_read_density = bw.stats(chrom, *promoter_boundaries, type="mean")[0]
-    gene_body_read_density = bw.stats(chrom, *gene_body_boundaries, type="mean")[0]
+    promoter_read_density = np.abs(np.nanmean(bw.values(chrom, *promoter_boundaries)))
+    gene_body_read_density = np.abs(np.nanmean(bw.values(chrom, *gene_body_boundaries)))
     if promoter_read_density is None or gene_body_read_density is None:
         return np.nan
     return promoter_read_density / gene_body_read_density
