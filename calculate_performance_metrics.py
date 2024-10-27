@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from scipy.spatial.distance import jensenshannon
 from scipy.stats import pearsonr, spearmanr
-import os
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -26,47 +26,33 @@ def main():
         help="A csv(.gz), npy, or npz file containing the observed procap tracks.",
     )
     parser.add_argument(
-        "--individual_folder",  
-        type=str,
-        default=None,  
-        help="folder to get the individual observed data to compare to",
-    )
-    parser.add_argument(
         "output",
         type=str,
         help="An hdf5 file to write the performance metrics to.",
     )
     args = parser.parse_args()
+
+    # Load predictions
     with h5py.File(args.predictions, "r") as hf:
         track = hf["track"][:]
         if len(hf["quantity"].shape) == 2:
             quantity = hf["quantity"][:, 0]
         else:
             quantity = hf["quantity"][:]
-    if args.individual_folder is not None:
-        #indiv data = where the individual id is located
-        #indiv_id = the individual id
-        #whole_file_name = the whole file name without the path 
-        #path_to_indiv_data = the path to the observed data for that individual
-        indiv_data = os.path.join(args.individual_folder, "lines.txt")
-        with open(indiv_data, "r") as file:
-            indiv_id = file.readline().strip()
-        whole_file_name = indiv_id + ".hs37d5.bwa.uniqueUMI_0.csv.gz"
-        path_to_indiv_data = os.path.join(os.path.dirname(args.observed), whole_file_name)
-        if path_to_indiv_data.endswith(".npz") or path_to_indiv_data.endswith(".npy"):
-            observed = np.load(path_to_indiv_data)
-            if path_to_indiv_data.endswith(".npz"):
-                observed = observed["arr_0"]
-        elif path_to_indiv_data.endswith(".csv.gz") or path_to_indiv_data.endswith(".csv"):
-            observed = pd.read_csv(path_to_indiv_data, header=None, index_col=0).to_numpy()
-    else:
-        if args.observed.endswith(".npz") or args.observed.endswith(".npy"):
-            observed = np.load(args.observed)
-            if args.observed.endswith(".npz"):
-                observed = observed["arr_0"]
-        elif args.observed.endswith(".csv.gz") or args.observed.endswith(".csv"):
-            observed = pd.read_csv(args.observed, header=None).to_numpy()
 
+    # Load observed data
+    if args.observed.endswith(".npz") or args.observed.endswith(".npy"):
+        observed = np.load(args.observed)
+        if args.observed.endswith(".npz"):
+            observed = observed["arr_0"]
+    elif args.observed.endswith(".csv.gz") or args.observed.endswith(".csv"):
+        observed = pd.read_csv(args.observed, header=None, index_col=0).to_numpy()
+    else:
+        raise ValueError(
+            f"File with observed PRO-cap data ({args.observed}) must be numpy or csv format."
+        )
+
+    # Validate dimensions
     if track.shape[0] != observed.shape[0]:
         raise ValueError(
             f"n predictions ({track.shape[0]}) and n observed ({observed.shape[0]}) do not match."
@@ -79,6 +65,8 @@ def main():
         raise ValueError(
             f"Padding around predicted tracks ({observed.shape[1] - track.shape[1]}) must be divisible by 4."
         )
+
+    # Trim off padding for observed tracks
     start = (observed.shape[1] - track.shape[1]) // 4
     end = observed.shape[1] // 2 - start
     observed_clipped = observed[
@@ -86,6 +74,7 @@ def main():
         np.r_[start:end, observed.shape[1] // 2 + start : observed.shape[1] // 2 + end],
     ]
 
+    # Benchmark directionality
     track_directionality = np.log1p(
         track[:, : track.shape[1] // 2].sum(axis=1)
     ) - np.log1p(track[:, track.shape[1] // 2 :].sum(axis=1))
@@ -94,13 +83,30 @@ def main():
     ) - np.log1p(observed_clipped[:, observed_clipped.shape[1] // 2 :].sum(axis=1))
     directionality_pearson = pearsonr(track_directionality, observed_directionality)
 
+    # Benchmark TSS position
+    strand_break = track.shape[1] // 2
+    pred_tss = np.concatenate(
+        [track[:, :strand_break].argmax(axis=1), track[:, strand_break:].argmax(axis=1)]
+    )
+    obs_tss = np.concatenate(
+        [
+            observed_clipped[:, :strand_break].argmax(axis=1),
+            observed_clipped[:, strand_break:].argmax(axis=1),
+        ]
+    )
+    tss_pos_pearson = pearsonr(pred_tss, obs_tss)
+
+    # Benchmark profile
     track_pearson = pd.DataFrame(track).corrwith(pd.DataFrame(observed_clipped), axis=1)
     track_js_distance = jensenshannon(track, observed_clipped, axis=1)
+
+    # Benchmark quantity
     quantity_log_pearson = pearsonr(
         np.log1p(quantity), np.log1p(observed_clipped.sum(axis=1))
     )
     quantity_spearman = spearmanr(quantity, observed_clipped.sum(axis=1))
 
+    # Print summary
     print(f"Median Track Pearson: {track_pearson.median():.4f}")
     print(
         f"Mean Track Pearson: {track_pearson.mean():.4f} "
@@ -112,9 +118,11 @@ def main():
         + f"+/- {pd.Series(track_js_distance).std():.4f}"
     )
     print(f"Track Directionality Pearson: {directionality_pearson[0]:.4f}")
+    print(f"TSS Position Pearson: {tss_pos_pearson[0]:.4f}")
     print(f"Quantity Log Pearson: {quantity_log_pearson[0]:.4f}")
     print(f"Quantity Spearman: {quantity_spearman[0]:.4f}")
 
+    # Save metrics
     with h5py.File(args.output, "w") as hf:
         hf.create_dataset(
             "track_pearson", data=track_pearson.to_numpy(), compression="gzip"
@@ -127,6 +135,7 @@ def main():
             data=np.array(directionality_pearson),
             compression="gzip",
         )
+        hf.create_dataset("tss_pos_pearson", data=tss_pos_pearson, compression="gzip")
         hf.create_dataset(
             "quantity_log_pearson",
             data=np.array(quantity_log_pearson),
